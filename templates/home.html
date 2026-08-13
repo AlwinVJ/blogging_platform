@@ -8,7 +8,7 @@
       <div class="col-md-8 px-0">
         <h1 class="display-4 font-italic">{{feature_blog.title}}</h1>
         <p class="lead my-3">{{feature_blog.short_description | truncatewords:25}}</p>
-        <p class="lead mb-0"><a href="#" class="text-white font-weight-bold">Continue reading...</a></p>
+        <p class="lead mb-0"><a href="{% url 'blogs' feature_blog.slug %}" class="text-white font-weight-bold">Continue reading...</a></p>
       </div>
     </div>
   {%endif%} 
@@ -22,7 +22,7 @@
     <div class="col-md-6">
       <div class="card border-0" >
         <div class="card-body">
-          <h3>{{feature_blog.title}}</h3>
+          <h3><a href="{% url 'blogs' feature_blog.slug %}" class="text-dark">{{feature_blog.title}}</a></h3>
           <small class="mb-1 text-muted">{{feature_blog.updated_at | timesince}} ago | {{feature_blog.author}}</small>
           <p class="card-text">{{feature_blog.short_description |truncatewords:25}}</p>
         </div>

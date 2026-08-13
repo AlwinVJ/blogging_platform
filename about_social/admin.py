@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import About
+from . models import About, SocialMedia
 
 
 class AboutAdmin(admin.ModelAdmin):
@@ -10,3 +10,4 @@ class AboutAdmin(admin.ModelAdmin):
         return False
 # Register your models here.
 admin.site.register(About, AboutAdmin)
+admin.site.register(SocialMedia)

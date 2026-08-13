@@ -1,5 +1,11 @@
+from blogs.models import Category
+
 from django.shortcuts import render
 
 
 def home(request):
-    return render(request, 'home.html')
+    categories = Category.objects.all()
+    context = {
+        'categories':categories
+    }
+    return render(request, 'home.html',context)

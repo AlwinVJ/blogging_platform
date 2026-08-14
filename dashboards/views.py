@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from blogs.models import Blog, Category
 from .forms import CategoryForm
@@ -20,6 +20,11 @@ def categories(request):
     return render(request,'dashboards/categories.html')
 
 def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
     form = CategoryForm()
     context = {
         'form':form

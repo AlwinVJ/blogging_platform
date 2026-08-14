@@ -33,6 +33,11 @@ def add_category(request):
 
 def edit_category(request, pk):
     category = Category.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('categories')
     form = CategoryForm(instance=category)
     context = {
         'form':form,

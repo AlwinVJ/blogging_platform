@@ -13,4 +13,7 @@ class BlogPostForm(forms.ModelForm):
         fields = ('title','category','featured_image','short_description','blog_body','status','is_featured')
         labels = {
             'is_featured':'Featured',
+            'blog_body':'Body',
+            'short_description':'Description',
+            'featured_image':'Add Image'
         }

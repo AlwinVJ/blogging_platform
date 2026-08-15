@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from blogs.models import Blog, Category
-from .forms import CategoryForm
+from .forms import BlogPostForm, CategoryForm
 
 # Create your views here.
 
@@ -56,3 +56,10 @@ def posts(request):
         'posts':posts
     }
     return render(request,'dashboards/posts.html', context)
+
+def add_post(request):
+    form = BlogPostForm
+    context = {
+        'form':form,
+    }
+    return render(request,'dashboards/add_post.html',context)

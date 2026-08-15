@@ -10,4 +10,7 @@ class CategoryForm(forms.ModelForm):
 class BlogPostForm(forms.ModelForm):
     class Meta:
         model = Blog
-        fields = ('title','category','featured_image','short_description','blog_body','status')
+        fields = ('title','category','featured_image','short_description','blog_body','status','is_featured')
+        labels = {
+            'is_featured':'Featured',
+        }

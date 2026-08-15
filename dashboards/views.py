@@ -93,3 +93,8 @@ def edit_post(request, pk):
         'post':post
     }
     return render(request, 'dashboards/edit_post.html',context)
+
+def delete_post(request,pk):
+    post = Blog.objects.get(pk=pk)
+    post.delete()
+    return redirect('posts')

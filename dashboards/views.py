@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from blogs.models import Blog, Category
 from .forms import BlogPostForm, CategoryForm
 from django.template.defaultfilters import slugify
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -98,3 +99,10 @@ def delete_post(request,pk):
     post = Blog.objects.get(pk=pk)
     post.delete()
     return redirect('posts')
+
+def users(request):
+    users = User.objects.all()
+    context = {
+        'users':users
+    }
+    return render(request,'dashboards/users.html',context)

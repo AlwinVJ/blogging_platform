@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from blogs.models import Blog, Category
+from blogs.models import Blog, Category, Comment
 from django.db.models import Q
 
 # Create your views here.
@@ -23,8 +23,10 @@ def posts_by_category(request, category_id):
 
 def blogs(request, slug):
     single_blog = get_object_or_404(Blog,slug=slug, status="Published")
+    comments = Comment.objects.filter(blog = single_blog) # Filtering out the comments related to the post
     context = {
-        'single_blog':single_blog
+        'single_blog':single_blog,
+        'comments':comments
     }
     return render(request,'blogs.html',context)
 

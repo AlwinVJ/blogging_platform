@@ -133,3 +133,8 @@ def edit_user(request, pk):
         'user': user
     }
     return render(request, 'dashboards/edit_user.html',context)
+
+def delete_user(request,pk):
+    user = User.objects.get(pk=pk)
+    user.delete()
+    return redirect('users')

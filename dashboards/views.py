@@ -118,3 +118,17 @@ def add_user(request):
         'form':form
     }
     return render(request,'dashboards/add_user.html',context)
+
+def edit_user(request, pk):
+    user = User.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = AddUserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('users')
+        
+    form = AddUserForm(instance=user)
+    context = {
+        'form': form,
+    }
+    return render(request, 'dashboards/edit_user.html',context)

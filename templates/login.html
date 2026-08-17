@@ -3,15 +3,26 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
-<h3 class="text-center">Login</h3>
-
-<form action="{% url 'login' %}" method="POST" style="width:500px; margin:auto;">
-    {% csrf_token %}
-    {{ form | crispy }}
-    <div class="text-center mt-4 mb-3">
-    <button type="submit" class="btn btn-warning px-5 py-2">
-        LogIn
-    </button>
+<div class="hallway-auth-container">
+    <h3 class="hallway-auth-title">Login to The Hallway</h3>
+    
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            {{ form|crispy }}
+        </div>
+        
+        <div class="text-center mt-4 mb-2">
+            <button type="submit" class="hallway-btn-gold px-5 py-2 d-inline-flex justify-content-center align-items-center w-100" style="font-size: 1rem !important;">
+                Log In
+            </button>
+        </div>
+    </form>
+    
+    <div class="text-center mt-3">
+        <p class="mb-0 text-muted" style="font-size: 0.85rem;">Don't have an account? <a href="{% url 'register' %}" class="font-weight-bold" style="color: var(--accent-gold);">Register here</a></p>
+    </div>
 </div>
-</form>
+
 {% endblock %}

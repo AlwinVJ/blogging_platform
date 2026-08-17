@@ -1,78 +1,182 @@
 {% extends 'base.html' %}
 
-{% block content%}
-<!--Important Featured Post -->
-{% for feature_blog in featured_blogs%}
-  {% if forloop.first%}    
-  <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark" style="background-image: url({{feature_blog.featured_image.url}});background-blend-mode: overlay;background-size:cover;">
-      <div class="col-md-8 px-0">
-        <h1 class="display-4 font-italic">{{feature_blog.title}}</h1>
-        <p class="lead my-3">{{feature_blog.short_description | truncatewords:25}}</p>
-        <p class="lead mb-0"><a href="{% url 'blogs' feature_blog.slug %}" class="text-white font-weight-bold">Continue reading...</a></p>
-      </div>
+{% block content %}
+
+<!-- Hero & Sidebar Section -->
+<div class="row">
+    <!-- Featured Story Centerpiece -->
+    <div class="col-lg-8 col-12">
+        {% for feature_blog in featured_blogs %}
+            {% if forloop.first %}
+            <div class="hallway-hero">
+                <span class="hallway-hero-label">Featured Story</span>
+                <h1 class="hallway-hero-title">{{ feature_blog.title }}</h1>
+                <p class="hallway-hero-description">{{ feature_blog.short_description|truncatewords:40 }}</p>
+                <div class="mb-4">
+                    <a href="{% url 'blogs' feature_blog.slug %}" class="hallway-btn-gold">Continue reading <i class="fa fa-arrow-right ml-1"></i></a>
+                </div>
+                
+                <!-- Display featured image only if available -->
+                {% if feature_blog.featured_image %}
+                <div class="hallway-hero-image-wrapper">
+                    <img src="{{ feature_blog.featured_image.url }}" class="hallway-hero-img" alt="{{ feature_blog.title }}">
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% empty %}
+            <div class="hallway-hero text-center py-5">
+                <h3 class="text-muted">No featured stories available.</h3>
+            </div>
+        {% endfor %}
     </div>
-  {%endif%} 
-  {%endfor%}
 
-  <!-- Feature posts -->
-  <h3 class="text-uppercase text-warning" style="letter-spacing: 2px;">Featured Blogs</h3>
-  <div class="row mb-2">
-    {% for feature_blog in featured_blogs%}
-    {% if not forloop.first%}
-    <div class="col-md-6">
-      <div class="card border-0" >
-        <div class="card-body">
-          <h3><a href="{% url 'blogs' feature_blog.slug %}" class="text-dark">{{feature_blog.title}}</a></h3>
-          <small class="mb-1 text-muted">{{feature_blog.updated_at | timesince}} ago | {{feature_blog.author}}</small>
-          <p class="card-text">{{feature_blog.short_description |truncatewords:25}}</p>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-    {%endfor%}
-  </div>
-
-  <main role="main" class="container p-0">
-    <!-- Recent Articles -->
-    <h3 class="text-uppercase text-warning" style="letter-spacing: 2px;">Recent Articles</h3>
-    <div class="row">
-      <div class="col-md-8 blog-main">
-      {% for not_featured_blog in not_featured_blogs %}
-        <div class="card border-0" >
-          <div class="card-body">
-            <h3> <a href="{% url 'blogs' not_featured_blog.slug  %}" class="text-dark">{{ not_featured_blog.title }}</a></h3>
-            <small class="mb-1 text-muted">{{not_featured_blog.updated_at | timesince}} ago | {{not_featured_blog.author}}</small>
-            <p class="card-text">{{not_featured_blog.short_description | truncatewords:25}}</p>
-        </div>
-      </div>
-      {%endfor%}
-      <!-- /.blog-post -->
-
-      </div>
-      <!-- /.blog-main -->
-
-      <aside class="col-md-4 blog-sidebar">
-        <div class="p-3 mb-3 bg-light rounded">
-          <h4 class="font-italic">{{about.about_heading}}</h4>
-          <p class="mb-0">{{about.about_description}}.</p>
-        </div>
-
-        {% if social_medias %}
-        <div class="p-3">
-          <h4 class="font-italic">Follow Us</h4>
-          <ol class="list-unstyled">
-            {% for media in social_medias %}
-            <li><a href="{{ media.link }}" target="_blank">{{ media.social_media }}</a></li>
-            {% endfor %}
-          </ol>
+    <!-- Sidebar Section -->
+    <div class="col-lg-4 col-12">
+        <!-- About Section -->
+        {% if about %}
+        <div class="hallway-sidebar-card">
+            <h4 class="hallway-sidebar-title">{{ about.about_heading|default:"About Us" }}</h4>
+            <p class="hallway-sidebar-text mb-0">{{ about.about_description }}</p>
         </div>
         {% endif %}
-      </aside><!-- /.blog-sidebar -->
 
-    </div><!-- /.row -->
+        <!-- Follow Us Section (Dynamic Social Media Links) -->
+        {% if social_medias %}
+        <div class="hallway-sidebar-card">
+            <h4 class="hallway-sidebar-title">Follow Us</h4>
+            <ul class="hallway-social-icons">
+                {% for media in social_medias %}
+                <li>
+                    <a href="{{ media.link }}" target="_blank" class="hallway-social-link" title="{{ media.social_media }}" aria-label="{{ media.social_media }}">
+                        {% if 'github' in media.social_media|lower %}
+                        <i class="fa fa-github"></i>
+                        {% elif 'twitter' in media.social_media|lower or 'x' in media.social_media|lower %}
+                        <i class="fa fa-twitter"></i>
+                        {% elif 'linkedin' in media.social_media|lower %}
+                        <i class="fa fa-linkedin"></i>
+                        {% elif 'facebook' in media.social_media|lower %}
+                        <i class="fa fa-facebook"></i>
+                        {% elif 'instagram' in media.social_media|lower %}
+                        <i class="fa fa-instagram"></i>
+                        {% elif 'rss' in media.social_media|lower %}
+                        <i class="fa fa-rss"></i>
+                        {% else %}
+                        <i class="fa fa-link"></i>
+                        {% endif %}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
 
-  </main><!-- /.container -->
-
+        <!-- Popular Topics Section (Dynamic Categories) -->
+        {% if categories %}
+        <div class="hallway-sidebar-card">
+            <h4 class="hallway-sidebar-title">Popular Topics</h4>
+            <ul class="hallway-sidebar-list">
+                {% for cat in categories %}
+                <li>
+                    <a href="{% url 'posts_by_category' cat.id %}">
+                        <i class="fa fa-folder-o mr-2 text-muted"></i> {{ cat.category_name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
 </div>
-{% endblock %}
 
+<!-- Featured Blogs Grid -->
+<div class="mt-4 mb-5">
+    <div class="hallway-section-header">
+        <h2 class="hallway-section-title">Featured Blogs</h2>
+    </div>
+    
+    <div class="row">
+        {% for feature_blog in featured_blogs %}
+            {% if not forloop.first %}
+            <div class="col-md-4 col-12 mb-4 d-flex">
+                <div class="hallway-card">
+                    <!-- Card image if available -->
+                    {% if feature_blog.featured_image %}
+                    <div class="hallway-card-img-wrapper">
+                        <img src="{{ feature_blog.featured_image.url }}" class="hallway-card-img" alt="{{ feature_blog.title }}">
+                    </div>
+                    {% endif %}
+                    <div class="hallway-card-body">
+                        <span class="hallway-card-category">{{ feature_blog.category.category_name }}</span>
+                        <h3 class="hallway-card-title">
+                            <a href="{% url 'blogs' feature_blog.slug %}">{{ feature_blog.title }}</a>
+                        </h3>
+                        <div class="hallway-card-meta">
+                            <span>{{ feature_blog.updated_at|timesince }} ago</span>
+                            &bull;
+                            <span>{{ feature_blog.author }}</span>
+                        </div>
+                        <p class="hallway-card-text">{{ feature_blog.short_description|truncatewords:20 }}</p>
+                        <div>
+                            <a href="{% url 'blogs' feature_blog.slug %}" class="hallway-btn-text">Read article <i class="fa fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% empty %}
+            <div class="col-12 text-center py-4">
+                <p class="text-muted">No additional featured blogs available.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Recent Articles Section -->
+<div class="mt-4 mb-5">
+    <div class="hallway-section-header">
+        <h2 class="hallway-section-title">Recent Articles</h2>
+    </div>
+    
+    <div class="row">
+        <!-- Main Feed -->
+        <div class="col-lg-8 col-12">
+            {% for not_featured_blog in not_featured_blogs %}
+            <div class="hallway-row-card">
+                <!-- Row image if available -->
+                {% if not_featured_blog.featured_image %}
+                <div class="hallway-row-card-img-wrapper d-none d-sm-block">
+                    <img src="{{ not_featured_blog.featured_image.url }}" class="hallway-row-card-img" alt="{{ not_featured_blog.title }}">
+                </div>
+                {% endif %}
+                <div class="hallway-row-card-body">
+                    <div class="hallway-row-card-meta">
+                        <span class="category">{{ not_featured_blog.category.category_name }}</span>
+                        &bull;
+                        <span>{{ not_featured_blog.updated_at|timesince }} ago</span>
+                        &bull;
+                        <span>{{ not_featured_blog.author }}</span>
+                    </div>
+                    <h3 class="hallway-row-card-title">
+                        <a href="{% url 'blogs' not_featured_blog.slug %}">{{ not_featured_blog.title }}</a>
+                    </h3>
+                    <p class="hallway-row-card-text">{{ not_featured_blog.short_description|truncatewords:25 }}</p>
+                    <div>
+                        <a href="{% url 'blogs' not_featured_blog.slug %}" class="hallway-btn-text">Read article <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="hallway-row-card p-4 justify-content-center">
+                <p class="text-muted mb-0">No recent articles found.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Right side is empty for this row as newsletter box is removed, leaving clean layout -->
+        <div class="col-lg-4 col-12 d-none d-lg-block">
+        </div>
+    </div>
+</div>
+
+{% endblock %}

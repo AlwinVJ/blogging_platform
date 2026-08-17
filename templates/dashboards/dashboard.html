@@ -1,30 +1,33 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
-{% block content%}
+{% block content %}
 
-<div class="row">
-    <!-- Left sidebar -->
-    <!-- load the sidebar here -->
-    {% include 'dashboards/sidebar.html' %}
+<div class="container-fluid p-0 mt-4">
+    <div class="row">
+        <!-- Dashboard Sidebar -->
+        {% include 'dashboards/sidebar.html' %}
 
-    <!-- Right side content -->
-    <div class="col-md-9">
-        <span>Logged in as <b>{{ user }}</b></span>
-        <div class="row">
-            <div class="col">
-                <div class="card border-default mb-3">
-                    <div class="card-header text-center text-uppercase font-weight-bold">All Categories</div>
-                    <div class="card-body text-dark">
-                        <h5 class="card-title text-center">{{ category_count }}</h5>
+        <!-- Main Panel Content -->
+        <div class="col-lg-9 col-md-8 col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="font-weight-bold mb-0" style="font-size: 1.75rem;">Dashboard Overview</h2>
+                <span class="text-muted" style="font-size: 0.9rem;">Logged in as: <strong>{{ user }}</strong></span>
+            </div>
+            
+            <div class="row">
+                <!-- Statistics Card: Categories -->
+                <div class="col-md-6 col-12 mb-3">
+                    <div class="hallway-dashboard-card text-center">
+                        <h3 class="hallway-dashboard-card-title">All Categories</h3>
+                        <p class="hallway-dashboard-card-val">{{ category_count }}</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="card border-default mb-3">
-                    <div class="card-header text-center text-uppercase font-weight-bold">All posts</div>
-                    <div class="card-body text-dark">
-                        <h5 class="card-title text-center">{{ blogs_count }}</h5>
+                <!-- Statistics Card: Posts -->
+                <div class="col-md-6 col-12 mb-3">
+                    <div class="hallway-dashboard-card text-center">
+                        <h3 class="hallway-dashboard-card-title">All Posts</h3>
+                        <p class="hallway-dashboard-card-val">{{ blogs_count }}</p>
                     </div>
                 </div>
             </div>
@@ -32,4 +35,4 @@
     </div>
 </div>
 
-{%endblock%}
+{% endblock %}

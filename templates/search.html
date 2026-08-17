@@ -2,49 +2,54 @@
 
 {% block content %}
 
-<!-- Search Results -->
-{% if blogs %}
+<div class="mt-4 mb-5">
+    {% if blogs %}
+        <div class="hallway-section-header">
+            <h2 class="hallway-section-title">Search Results for: <span class="font-italic" style="color: var(--accent-gold);">"{{ keyword }}"</span></h2>
+        </div>
 
-    <h3 class="text-warning"
-        style="letter-spacing: 2px;">
-        Search Term : {{ keyword }}
-    </h3>
-
-    <div class="row mb-2">
-
-        {% for blog in blogs %}
-
-            <div class="col-md-6">
-                <div class="card border-0">
-                    <div class="card-body">
-
-                        <h3>
-                            <a href="{% url 'blogs' blog.slug %}" class="text-dark">
-                                {{ blog.title }}
-                            </a>
+        <div class="row">
+            <div class="col-lg-9 col-12">
+                {% for blog in blogs %}
+                <div class="hallway-row-card">
+                    <!-- Row image if available -->
+                    {% if blog.featured_image %}
+                    <div class="hallway-row-card-img-wrapper d-none d-sm-block">
+                        <img src="{{ blog.featured_image.url }}" class="hallway-row-card-img" alt="{{ blog.title }}">
+                    </div>
+                    {% endif %}
+                    <div class="hallway-row-card-body">
+                        <div class="hallway-row-card-meta">
+                            <span class="category">{{ blog.category.category_name }}</span>
+                            &bull;
+                            <span>{{ blog.updated_at|timesince }} ago</span>
+                            &bull;
+                            <span>{{ blog.author }}</span>
+                        </div>
+                        <h3 class="hallway-row-card-title">
+                            <a href="{% url 'blogs' blog.slug %}">{{ blog.title }}</a>
                         </h3>
-
-                        <small class="mb-1 text-muted">
-                            {{ blog.updated_at|timesince }} ago |
-                            {{ blog.author }}
-                        </small>
-
-                        <p class="card-text">
-                            {{ blog.short_description|truncatewords:25 }}
-                        </p>
-
+                        <p class="hallway-row-card-text">{{ blog.short_description|truncatewords:25 }}</p>
+                        <div>
+                            <a href="{% url 'blogs' blog.slug %}" class="hallway-btn-text">Read article <i class="fa fa-arrow-right"></i></a>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
+        </div>
 
-        {% endfor %}
-
-    </div>
-
-{% else %}
-
-    <p>No posts found</p>
-
-{% endif %}
+    {% else %}
+        <div class="hallway-section-header">
+            <h2 class="hallway-section-title">Search Results for: <span class="font-italic">"{{ keyword }}"</span></h2>
+        </div>
+        <div class="p-5 text-center rounded" style="background-color: var(--surface-color); border: 1px solid var(--border-color);">
+            <i class="fa fa-search text-muted mb-3" style="font-size: 3rem;"></i>
+            <h3 class="h4 text-muted">No posts found</h3>
+            <p class="text-muted mb-4">We couldn't find any articles matching your search criteria. Please try another term.</p>
+            <a href="/" class="hallway-btn-gold">Return Home</a>
+        </div>
+    {% endif %}
+</div>
 
 {% endblock %}

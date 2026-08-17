@@ -1,15 +1,42 @@
-<div class="container">
-    <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
-        <div class="col-md-8 text-center">
-            <h1 class="display-4 text-warning">404</h1>
-            <h2 class="mb-3">Page does not exist</h2>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found — The Hallway</title>
+    <!-- Bootstrap 4 dependency -->
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Theme & Layout Styles -->
+    <link href="{% static 'css/blog.css' %}" rel="stylesheet">
+    
+    <!-- Theme detection to avoid style flash on load -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else {
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', systemPrefersDark ? 'dark' : 'light');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="hallway-404-container">
+        <div class="hallway-404-content">
+            <h1 class="hallway-404-title">404</h1>
+            <h2 class="hallway-404-subtitle">Page not found.</h2>
             <p class="text-muted mb-4">
-                The page you're looking for could not be found.
+                The page you're looking for doesn't exist.
             </p>
-
-            <a href="{% url 'home' %}" class="btn btn-warning">
-                Go Back Home
+            <a href="/" class="hallway-btn-gold">
+                Return Home
             </a>
         </div>
     </div>
-</div>
+</body>
+</html>

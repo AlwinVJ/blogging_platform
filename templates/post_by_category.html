@@ -1,48 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <!-- Categorical Posts -->
-    <h3 class="text-uppercase text-warning"
-        style="letter-spacing: 2px;">
-        {{category}}
-    </h3>
 
-    <div class="row mb-2">
-
-        {% for post in posts %}
-
-            <div class="col-md-6">
-
-                <div class="card border-0">
-
-                    <div class="card-body">
-
-                        <h3>
-                            <a href="{% url 'blogs' post.slug %}" class="text-dark">{{ post.title }}</a>
-                        </h3>
-
-                        <small class="mb-1 text-muted">
-                            {{ post.updated_at|timesince }} ago |
-                            {{ post.author }}
-                        </small>
-
-                        <p class="card-text">
-                            {{ post.short_description|truncatewords:25 }}
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        {% empty %}
-
-            <p>No posts found</p>
-
-        {% endfor %}
-
+<div class="mt-4 mb-5">
+    <div class="hallway-section-header">
+        <h2 class="hallway-section-title">Category: <span class="font-italic" style="color: var(--accent-gold);">{{ category.category_name }}</span></h2>
     </div>
 
+    <div class="row">
+        <div class="col-lg-9 col-12">
+            {% for post in posts %}
+            <div class="hallway-row-card">
+                <!-- Row image if available -->
+                {% if post.featured_image %}
+                <div class="hallway-row-card-img-wrapper d-none d-sm-block">
+                    <img src="{{ post.featured_image.url }}" class="hallway-row-card-img" alt="{{ post.title }}">
+                </div>
+                {% endif %}
+                <div class="hallway-row-card-body">
+                    <div class="hallway-row-card-meta">
+                        <span class="category">{{ post.category.category_name }}</span>
+                        &bull;
+                        <span>{{ post.updated_at|timesince }} ago</span>
+                        &bull;
+                        <span>{{ post.author }}</span>
+                    </div>
+                    <h3 class="hallway-row-card-title">
+                        <a href="{% url 'blogs' post.slug %}">{{ post.title }}</a>
+                    </h3>
+                    <p class="hallway-row-card-text">{{ post.short_description|truncatewords:25 }}</p>
+                    <div>
+                        <a href="{% url 'blogs' post.slug %}" class="hallway-btn-text">Read article <i class="fa fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-5 text-center rounded" style="background-color: var(--surface-color); border: 1px solid var(--border-color);">
+                <i class="fa fa-folder-open-o text-muted mb-3" style="font-size: 3rem;"></i>
+                <h3 class="h4 text-muted">No posts found</h3>
+                <p class="text-muted mb-4">No articles have been published in the "{{ category.category_name }}" category yet.</p>
+                <a href="/" class="hallway-btn-gold">Return Home</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
+
 {% endblock %}

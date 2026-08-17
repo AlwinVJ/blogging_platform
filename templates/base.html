@@ -1,5 +1,4 @@
 {% load static %}
-<!-- Header Part -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,54 +6,119 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Hallway</title>
+    <!-- Bootstrap 4 dependency is retained -->
     <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
-    <link href="{% static 'css/blog.css'%}" rel="stylesheet">
+    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans-serif) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome 4.7 for moon/sun/search/dashboard icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  </head>
+    <!-- Custom theme & layout system -->
+    <link href="{% static 'css/blog.css' %}" rel="stylesheet">
+    
+    <!-- Theme early initialization script to prevent flash of wrong theme -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else {
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', systemPrefersDark ? 'dark' : 'light');
+            }
+        })();
+    </script>
+</head>
 <body>
-    <div class="container">
-      <header class="blog-header py-3">
-        <div class="row flex-nowrap justify-content-between align-items-center">
-          <div class="col-4 pt-1">
-            <a class="blog-header-logo text-dark" href="/">The Hallway</a>
-          </div>
-          <div class="col-4">
-            <form action="{% url 'search' %}", method="GET">
-              <div class="input-group">
-                <input class="form-control" type="text" name="keyword" value="{{keyword}}" placeholder="Enter search term ..." aria-label="Enter search term..." aria-describedby="button-search" />
-                <button type="submit" class="btn btn-warning ml-2" id="button-search" type="button">Search</button>
-              </div>
-            </form>
-          </div>
-          <div class="col-4 d-flex justify-content-end align-items-center">
-            {% if not user.is_authenticated %}
-            <a class="btn btn-sm btn-warning" href="{% url 'login'%}">Login</a> &nbsp;
-            <a class="btn btn-sm btn-outline-secondary" href="{% url 'register' %}">Register</a>
-            {% else%}
-            <a class="btn btn-sm btn-outline-secondary" href="{% url 'dashboard' %}">Dashboard</a>  &nbsp;
-            <a class="btn btn-sm btn-warning" href="{% url 'logout' %}">Logout</a>
-            {% endif%}
-          </div>
+    <div class="hallway-container">
+        <!-- Header -->
+        <header class="hallway-header py-4">
+            <div class="row align-items-center">
+                <!-- Branding -->
+                <div class="col-md-4 col-12 mb-3 mb-md-0">
+                    <div class="hallway-brand-section text-center text-md-left">
+                        <a class="hallway-brand" href="/">The Hallway</a>
+                        <span class="hallway-tagline">Ideas. Stories. Perspectives.</span>
+                    </div>
+                </div>
+                <!-- Search -->
+                <div class="col-md-4 col-12 mb-3 mb-md-0 d-flex justify-content-center">
+                    <form action="{% url 'search' %}" method="GET" class="hallway-search-form">
+                        <div class="hallway-search-group">
+                            <input class="hallway-search-input form-control" type="text" name="keyword" value="{{ keyword|default:'' }}" placeholder="Search articles..." aria-label="Search articles">
+                            <button type="submit" class="hallway-search-btn" aria-label="Search">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Actions & Toggle -->
+                <div class="col-md-4 col-12 d-flex justify-content-center justify-content-md-end align-items-center">
+                    <div class="d-flex align-items-center" style="gap: 12px;">
+                        {% if not user.is_authenticated %}
+                        <a class="hallway-btn-outline" href="{% url 'login' %}">Login</a>
+                        <a class="hallway-btn-gold" href="{% url 'register' %}">Register</a>
+                        {% else %}
+                        <a class="hallway-btn-outline" href="{% url 'dashboard' %}">Dashboard</a>
+                        <a class="hallway-btn-gold" href="{% url 'logout' %}">Logout</a>
+                        {% endif %}
+                        <button id="theme-toggle" class="hallway-theme-toggle" aria-label="Toggle dark mode">
+                            <i class="fa fa-moon-o"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Category Navigation -->
+        <div class="hallway-nav-bar">
+            <nav class="hallway-nav">
+                <!-- If category_id is not passed, it is the home/all view -->
+                <a class="hallway-nav-link {% if not category and not category_id and request.path == '/' %}active{% endif %}" href="/">All</a>
+                {% for category_item in categories %}
+                <a class="hallway-nav-link {% if category.id == category_item.id or category_id == category_item.id %}active{% endif %}" href="{% url 'posts_by_category' category_item.id %}">{{ category_item.category_name }}</a>
+                {% endfor %}
+            </nav>
         </div>
-      </header>
 
-      <div class="nav-scroller py-1 mb-2">
-        <nav class="nav d-flex justify-content-between">
-          {% for category in categories%}
-          <a class="p-2 text-muted" href="{% url 'posts_by_category' category.id%}">{{category.category_name}}</a>
-          {% endfor %}
-        </nav>
-      </div>
+        <!-- Main Body Content -->
+        {% block content %}
+        {% endblock %}
 
-<!-- Main body -->
-{% block content%}
+        <!-- Editorial Footer -->
+        <footer class="hallway-footer mt-5">
+            <p>The Hallway &copy; 2026. Built with Django by <a href="https://github.com/AlwinVJ" target="_blank">Alwin V J</a></p>
+        </footer>
+    </div>
 
-{% endblock %}
-
-<!-- Footer part -->
-<footer class="blog-footer">
-  <p>Django blog built with   by <a href="#">Alwin V J</a></p>
-</footer>
+    <!-- Theme Toggle Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('theme-toggle');
+            if (toggleBtn) {
+                const icon = toggleBtn.querySelector('i');
+                
+                // Helper to update toggle button icon
+                function updateIcon(theme) {
+                    if (theme === 'dark') {
+                        icon.className = 'fa fa-sun-o';
+                    } else {
+                        icon.className = 'fa fa-moon-o';
+                    }
+                }
+                
+                // Fetch the current theme from DOM state (which was early initialized)
+                let currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                updateIcon(currentTheme);
+                
+                // Toggle event handler
+                toggleBtn.addEventListener('click', function() {
+                    let targetTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', targetTheme);
+                    localStorage.setItem('theme', targetTheme);
+                    updateIcon(targetTheme);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

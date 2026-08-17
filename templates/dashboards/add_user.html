@@ -1,27 +1,38 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
-
-{%block content%}
+{% block content %}
 {% load crispy_forms_tags %}
 
-<div class="row">
-    <!-- Left sidebar -->
-    <!-- load the sidebar here -->
-    {% include 'dashboards/sidebar.html' %}
+<div class="container-fluid p-0 mt-4">
+    <div class="row">
+        <!-- Dashboard Sidebar -->
+        {% include 'dashboards/sidebar.html' %}
 
-    <!-- Right side content -->
-    <div class="col-md-9">
-        {% if perms.auth.view_user %}
-        <h2>Add New User</h2>
-        <form action="{% url 'add_user' %}" method="POST">
-            {% csrf_token %}
-            {{ form | crispy }}
-            <button type="submit" class="btn btn-warning">Add</button>
-        </form>
-        <br>
-        {% else%}
-        {% include '404.html' %}
-        {% endif %}
+        <!-- Right Side Panel -->
+        <div class="col-lg-9 col-md-8 col-12">
+            {% if perms.auth.view_user %}
+            <h2 class="font-weight-bold mb-4" style="font-size: 1.75rem;">Add New User</h2>
+            
+            <div class="p-4 rounded" style="background-color: var(--surface-color); border: 1px solid var(--border-color); max-width: 600px;">
+                <form action="{% url 'add_user' %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        {{ form|crispy }}
+                    </div>
+                    
+                    <button type="submit" class="hallway-btn-gold px-4 py-2">
+                        <i class="fa fa-user-plus mr-1"></i> Add User
+                    </button>
+                    <a href="{% url 'users' %}" class="hallway-btn-outline ml-2 px-4 py-2">Cancel</a>
+                </form>
+            </div>
+            <br>
+            {% else %}
+                {% include '404.html' %}
+            {% endif %}
+        </div>
     </div>
 </div>
+
 {% endblock %}

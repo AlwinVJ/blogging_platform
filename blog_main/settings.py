@@ -37,11 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Project applications
     'blogs',
     'about_social',
     'crispy_forms',
     'crispy_bootstrap4',
-    'dashboards'
+    'dashboards',
+    
 ]
 
 MIDDLEWARE = [
@@ -104,7 +107,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
